@@ -149,6 +149,8 @@ type StatEndpointParams = Omit<EndpointParams, 'cursor' | 'page'> & {
   expand?: string | string[];
 };
 
+type CursorHandler = React.ComponentProps<typeof Pagination>['onCursor'];
+
 class IssueListOverview extends React.Component<Props, State> {
   state: State = this.getInitialState();
 
@@ -752,11 +754,9 @@ class IssueListOverview extends React.Component<Props, State> {
     this.transitionTo({display});
   };
 
-  onCursorChange = (cursor: string | undefined, _path, query, pageDiff: number) => {
-    const queryPageInt = parseInt(query.page, 10);
-    let nextPage: number | undefined = isNaN(queryPageInt)
-      ? pageDiff
-      : queryPageInt + pageDiff;
+  onCursorChange: CursorHandler = (cursor, _path, _query, delta) => {
+    const queryPageInt = parseInt(this.props.location.query.page, 10);
+    let nextPage: number | undefined = isNaN(queryPageInt) ? delta : queryPageInt + delta;
 
     // unset cursor and page when we navigate back to the first page
     // also reset cursor if somehow the previous button is enabled on
@@ -1147,17 +1147,13 @@ class IssueListOverview extends React.Component<Props, State> {
                 {this.renderStreamBody()}
               </PanelBody>
             </Panel>
-            <PaginationWrapper>
-              {groupIds?.length > 0 && (
-                <div>
-                  {/* total includes its own space */}
-                  {tct('Showing [displayCount] issues', {
-                    displayCount,
-                  })}
-                </div>
-              )}
-              <StyledPagination pageLinks={pageLinks} onCursor={this.onCursorChange} />
-            </PaginationWrapper>
+            <StyledPagination
+              caption={tct('Showing [displayCount] issues', {
+                displayCount,
+              })}
+              pageLinks={pageLinks}
+              onCursor={this.onCursorChange}
+            />
           </StreamContent>
 
           <SidebarContainer showSidebar={isSidebarVisible}>
@@ -1222,16 +1218,8 @@ const SidebarContainer = styled('div')<{showSidebar: boolean}>`
   }
 `;
 
-const PaginationWrapper = styled('div')`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: ${p => p.theme.fontSizeMedium};
-`;
-
 const StyledPagination = styled(Pagination)`
   margin-top: 0;
-  margin-left: ${space(2)};
 `;
 
 const StyledQueryCount = styled(QueryCount)`

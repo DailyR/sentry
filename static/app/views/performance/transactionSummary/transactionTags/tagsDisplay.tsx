@@ -1,7 +1,7 @@
 import React from 'react';
 import {browserHistory} from 'react-router';
 import {withTheme} from '@emotion/react';
-import {Location, Query} from 'history';
+import {Location} from 'history';
 
 import {GridColumnOrder} from 'app/components/gridEditable';
 import {Organization, Project} from 'app/types';
@@ -98,6 +98,8 @@ export const TAGS_TABLE_COLUMN_ORDER: TagsTableColumn[] = [
   },
 ];
 
+type CursorHandler = React.ComponentProps<typeof TagValueTable>['onCursor'];
+
 const TagsDisplay = (props: Props) => {
   const {eventView: _eventView, location, organization, projects, tagKey} = props;
   const eventView = _eventView.clone();
@@ -108,12 +110,11 @@ const TagsDisplay = (props: Props) => {
     eventView
   );
 
-  const handleCursor = (cursor: string, pathname: string, query: Query) => {
+  const handleCursor: CursorHandler = (cursor, pathname, query) =>
     browserHistory.push({
       pathname,
       query: {...query, [TAG_PAGE_TABLE_CURSOR]: cursor},
     });
-  };
 
   const cursor = decodeScalar(location.query?.[TAG_PAGE_TABLE_CURSOR]);
 

@@ -2,7 +2,7 @@ import {Component, Fragment} from 'react';
 import {browserHistory} from 'react-router';
 import styled from '@emotion/styled';
 import * as Sentry from '@sentry/react';
-import {Location, Query} from 'history';
+import {Location} from 'history';
 import pick from 'lodash/pick';
 
 import {Client} from 'app/api';
@@ -30,6 +30,8 @@ type Period = {
   start: string;
   end: string;
 };
+
+type CursorHandler = React.ComponentProps<typeof Pagination>['onCursor'];
 
 type Props = {
   api: Client;
@@ -112,12 +114,11 @@ class List extends Component<Props, State> {
       .filter(event => !!event) as Array<CustomGroup>;
   };
 
-  handleCursorChange(cursor: string, path: string, query: Query, pageDiff: number) {
+  handleCursorChange: CursorHandler = (cursor, path, query, delta) =>
     browserHistory.push({
       pathname: path,
-      query: {...query, cursor: pageDiff <= 0 ? undefined : cursor},
+      query: {...query, cursor: delta <= 0 ? undefined : cursor},
     });
-  }
 
   handleRetry = () => {
     this.getGroups();

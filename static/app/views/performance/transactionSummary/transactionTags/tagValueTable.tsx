@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {browserHistory} from 'react-router';
 import styled from '@emotion/styled';
-import {Location, LocationDescriptorObject, Query} from 'history';
+import {Location, LocationDescriptorObject} from 'history';
 
 import GridEditable, {COL_WIDTH_UNDEFINED, GridColumn} from 'app/components/gridEditable';
 import SortLink from 'app/components/gridEditable/sortLink';
@@ -46,7 +46,7 @@ type Props = {
   tableData: TableData | null;
   pageLinks: string | null;
   isLoading: boolean;
-  onCursor?: (cursor: string, path: string, query: Query, _direction: number) => void;
+  onCursor?: React.ComponentProps<typeof Pagination>['onCursor'];
 };
 
 type State = {

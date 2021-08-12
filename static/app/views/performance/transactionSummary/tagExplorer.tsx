@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {browserHistory} from 'react-router';
 import styled from '@emotion/styled';
-import {Location, LocationDescriptorObject, Query} from 'history';
+import {Location, LocationDescriptorObject} from 'history';
 
 import Feature from 'app/components/acl/feature';
 import {GuideAnchor} from 'app/components/assistant/guideAnchor';
@@ -525,9 +525,13 @@ type HeaderProps = {
   location: Location;
   pageLinks: string | null;
 };
+
+type CursorHandler = React.ComponentProps<typeof Pagination>['onCursor'];
+
 function TagsHeader(props: HeaderProps) {
   const {pageLinks, organization, location, transactionName} = props;
-  const handleCursor = (cursor: string, pathname: string, query: Query) => {
+
+  const handleCursor: CursorHandler = (cursor, pathname, query) => {
     trackAnalyticsEvent({
       eventKey: 'performance_views.summary.tag_explorer.change_page',
       eventName: 'Performance Views: Tag Explorer Change Page',

@@ -31,6 +31,8 @@ import TransactionsTable from './transactionsTable';
 
 const DEFAULT_TRANSACTION_LIMIT = 5;
 
+type CursorHandler = React.ComponentProps<typeof Pagination>['onCursor'];
+
 export type DropdownOption = {
   /**
    * The sort to apply to the eventView when this is selected.
@@ -136,7 +138,7 @@ class TransactionsList extends React.Component<Props> {
     limit: DEFAULT_TRANSACTION_LIMIT,
   };
 
-  handleCursor = (cursor: string, pathname: string, query: Query) => {
+  handleCursor: CursorHandler = (cursor, pathname, query) => {
     const {cursorName} = this.props;
     browserHistory.push({
       pathname,
